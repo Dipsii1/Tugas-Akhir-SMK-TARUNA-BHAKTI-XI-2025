@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getUserByEmail,  createUserFromGoogle } from "@/app/lib/actions";
+import { getUserByEmail, createUserFromGoogle, getAdminByName } from "@/app/lib/actions";
 import { compare } from "bcryptjs";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -38,6 +38,31 @@ export const authOptions = {
         };
       },
     }),
+    // Admin Credentials Provider
+    CredentialsProvider({
+      id: "admin-login",
+      name: "Admin Credentials",
+      credentials: {
+        name: { label: "name", type: "name" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const { name, password } = credentials as { name: string; password: string };
+
+        const admin = await getAdminByName(name);
+
+        if (!admin) return null;
+
+        const isValid = await compare(password, admin.password);
+        if (!isValid) return null;
+
+        return {
+          id: String(admin.id),
+          name: admin.name,
+          role: admin.role,
+        };
+      },
+    }),
   ],
   callbacks: {
     async signIn({ user, account }) {
@@ -54,6 +79,7 @@ export const authOptions = {
         token.id = user.id
         token.name = user.name
         token.role = user.role
+        token.type = user.role === "admin" ? "admin" : "user"  
       }
       return token
     },
@@ -62,6 +88,7 @@ export const authOptions = {
         session.user.id = token.id
         session.user.name = token.name
         session.user.role = token.role
+        session.user.type = token.type
       }
       return session
     },

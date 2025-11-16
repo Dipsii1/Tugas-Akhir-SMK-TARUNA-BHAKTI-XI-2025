@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { FcGoogle } from "react-icons/fc"
 import { Eye, EyeOff } from "lucide-react"
 
 import { registerAdmin } from "@/app/lib/actions"
@@ -20,12 +19,8 @@ import { registerAdmin } from "@/app/lib/actions"
 export function RegisterForm() {
   const [password, setPassword] = useState("")
   const [passwordError, setPasswordError] = useState("")
-  const [emailError, setEmailError] = useState("")
   const [showPassword, setShowPassword] = useState(false) // 👈 state untuk toggle
 
-  const handleGoogleLogin = async () => {
-    await signIn("google", { callbackUrl: "/login" })
-  }
 
   const validatePassword = (value: string) => {
     const strongPassword = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -41,7 +36,7 @@ export function RegisterForm() {
       <Card className="w-full shadow-md border border-blue-100 bg-white/90 backdrop-blur">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-semibold text-blue-700">
-            Create an account
+            Create an account Admin
           </CardTitle>
           <CardDescription className="text-gray-500">
             Join us and start your journey today
@@ -53,11 +48,6 @@ export function RegisterForm() {
             <div className="grid gap-3">
               <Label htmlFor="name">Username</Label>
               <Input id="name" name="name" placeholder="johndoe" required />
-            </div>
-
-            <div className="grid gap-1">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" name="email" placeholder="m@example.com" required />
             </div>
 
             <div className="grid gap-1">
@@ -104,15 +94,6 @@ export function RegisterForm() {
               <span className="relative bg-white px-2 text-gray-500 text-sm">or</span>
             </div>
 
-            {/* Google login */}
-            <Button
-              onClick={handleGoogleLogin}
-              variant="outline"
-              className="w-full flex items-center justify-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-100"
-            >
-              <FcGoogle size={22} />
-              Continue with Google
-            </Button>
 
             <div className="text-center text-sm text-gray-600">
               Already have an account?{" "}

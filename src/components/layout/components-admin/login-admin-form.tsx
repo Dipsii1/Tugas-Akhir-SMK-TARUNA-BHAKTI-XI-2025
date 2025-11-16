@@ -12,29 +12,25 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { FcGoogle } from "react-icons/fc"
 import { redirect } from "next/navigation"
 import { Eye, EyeOff, Book } from "lucide-react"
 
 export function LoginForm() {
     const [showPassword, setShowPassword] = useState(false)
 
-    const handleGoogleLogin = async () => {
-        await signIn("google", { callbackUrl: "/dashboard" })
-    }
 
     async function handleSubmit(formLogin: FormData) {
-        const email = String(formLogin.get('email'))
+        const name = String(formLogin.get('name'))
         const password = String(formLogin.get('password'))
 
-        if (!email || !password) {
+        if (!name || !password) {
             alert("Please fill in all fields.")
             return
         }
 
-        const result = await signIn("credentials", {
+        const result = await signIn("admin-login", {
             redirect: true,
-            email,
+            name,
             password,
             callbackUrl: "/admin/dashboard",
         })
@@ -50,7 +46,7 @@ export function LoginForm() {
             <Card className="w-full shadow-md border border-blue-100 bg-white/90 backdrop-blur">
                 <CardHeader className="text-center">
                     <CardTitle className="text-2xl font-semibold text-blue-700">
-                        Welcome back
+                        Welcome back Admin
                     </CardTitle>
                     <CardDescription className="text-gray-500">
                         Sign in to continue your journey
@@ -61,14 +57,8 @@ export function LoginForm() {
                     <div className="grid gap-6">
 
                         <div className="grid gap-3">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="m@example.com"
-                                name="email"
-                                required
-                            />
+                            <Label htmlFor="name">Username</Label>
+                            <Input id="name" name="name" placeholder="johndoe" required />
                         </div>
 
                         <div className="grid gap-3 relative">
@@ -102,15 +92,6 @@ export function LoginForm() {
                             <span className="absolute inset-x-0 top-1/2 border-t border-gray-200"></span>
                             <span className="relative bg-white px-2 text-gray-500 text-sm">or</span>
                         </div>
-
-                        <Button
-                            onClick={handleGoogleLogin}
-                            variant="outline"
-                            className="w-full flex items-center justify-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-100"
-                        >
-                            <FcGoogle size={22} />
-                            Continue with Google
-                        </Button>
 
                         <div className="text-center text-sm text-gray-600">
                             Don’t have an account?{" "}

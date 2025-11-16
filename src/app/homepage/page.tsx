@@ -13,8 +13,6 @@ export default async function HomePage() {
 
     console.log("Session User:", user);
 
-    const categories = ["Pelajaran", "Fiksi", "Nonfiksi", "Referensi", "Komik", "Biografi", "Teknologi", "Novel"]
-
     return (
         <div className="flex min-h-screen bg-gradient-to-br from-blue-200 via-white to-blue-100">
             <SidebarUser />
@@ -23,7 +21,6 @@ export default async function HomePage() {
 
                 {/* Search + Profile Bar */}
                 <div className="w-full flex items-center justify-between pr-8">
-
                     {/* Search Bar */}
                     <div className="max-w-sm w-full">
                         <input
@@ -52,3 +49,5 @@ export default async function HomePage() {
         </div>
     )
 }
+
+

@@ -1,5 +1,7 @@
 export default function CategoriesBook() {
+
     const categories = ["Pelajaran", "Fiksi", "Nonfiksi", "Referensi", "Komik", "Biografi", "Teknologi", "Novel"]   
+    
     return (
         <section className="mt-14">
             <h2 className="text-2xl font-semibold mb-6 text-blue-700">Categories Book</h2>
