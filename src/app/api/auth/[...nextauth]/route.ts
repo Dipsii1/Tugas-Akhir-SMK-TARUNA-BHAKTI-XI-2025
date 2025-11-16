@@ -52,16 +52,16 @@ export const authOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
+        token.name = user.name
         token.role = user.role
-        token.image = user.image
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id
+        session.user.name = token.name
         session.user.role = token.role
-        session.user.image = token.image
       }
       return session
     },

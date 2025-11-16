@@ -1,7 +1,7 @@
-import { RegisterForm } from "@/components/layout/register-form"
+import {RecoveryForm } from "@/components/layout/recovery-form"
 import { Book } from "lucide-react"
 
-export default async function LoginPage() {
+export default async function RecoveryPage() {
   return (
     <div className="flex min-h-screen w-screen flex-col items-center justify-center bg-gradient-to-br from-blue-300 via-white to-blue-100 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -14,7 +14,7 @@ export default async function LoginPage() {
           <span className="text-lg font-bold">LibroSpace</span>
         </div>
 
-        <RegisterForm />
+        <RecoveryForm />
       </div>
     </div>
   )

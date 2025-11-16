@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 
 export async function registerUser(formRegister: FormData) {
 
-    const name = String(formRegister.get('nama'));
+    const name = String(formRegister.get('name'));
     const email = String(formRegister.get('email'));
     const password = bcrypt.hashSync(String(formRegister.get('password')), 10);
 
@@ -15,6 +15,20 @@ export async function registerUser(formRegister: FormData) {
     );
 
     redirect('/login');
+}
+
+export async function registerAdmin(formRegister: FormData) {
+
+    const name = String(formRegister.get('name'));
+    const email = String(formRegister.get('email'));
+    const password = bcrypt.hashSync(String(formRegister.get('password')), 10);
+
+    await connection.execute(
+        'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
+        [name, email, password, 'admin']
+    );
+    redirect('/admin/login-admin');
+
 }
 
 

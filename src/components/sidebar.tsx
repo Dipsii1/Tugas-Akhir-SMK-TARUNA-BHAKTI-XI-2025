@@ -6,7 +6,7 @@ export default function Sidebar() {
     <div className="w-64 bg-white h-screen shadow-md p-5 flex flex-col justify-between fixed">
       {/* Bagian Atas */}
       <div>
-        <h1 className="text-2xl font-bold mb-8 text-blue-600">My Dashboard</h1>
+        <h1 className="text-2xl font-bold mb-8 text-blue-600">LibroSpace</h1>
         <nav className="space-y-3">
           <a
             href="/"

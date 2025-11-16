@@ -9,9 +9,9 @@ export default async function DashBoard() {
 
     console.log("Session User:", user);
 
-    // if (user.role !== 'admin') {
-    //     redirect('/unauthorized')
-    // }
+    if (user.role !== 'admin') {
+        redirect('/unauthorized')
+    }
 
     return (
         <div className="flex">
