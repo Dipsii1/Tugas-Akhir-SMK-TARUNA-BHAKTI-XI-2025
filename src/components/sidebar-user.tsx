@@ -1,7 +1,7 @@
 "use client";
 import { signOut } from "next-auth/react"
 import Link from "next/link"
-import { Menu, Library, BookOpen, Home, Settings } from "lucide-react"
+import { Menu, Library, BookOpen, Home, Settings,Bookmark } from "lucide-react"
 
 
 export default function SidebarUser() {
@@ -13,12 +13,16 @@ export default function SidebarUser() {
         </div>
 
         <nav className="flex flex-col gap-4 text-gray-700">
-          <Link href="/dashboard" className="flex items-center gap-3 hover:text-blue-600 mb-5">
+          <Link href="/homepage" className="flex items-center gap-3 hover:text-blue-600 mb-5">
             <Home className="h-5 w-5" /> Beranda
           </Link>
 
           <Link href="/buku" className="flex items-center gap-3 hover:text-blue-600 mb-5">
             <BookOpen className="h-5 w-5" /> Buku
+          </Link>
+
+          <Link href="/users/favorites" className="flex items-center gap-3 hover:text-blue-600 mb-5">
+            <Bookmark className="h-5 w-5" /> Favorites
           </Link>
 
           <Link href="/peminjaman" className="flex items-center gap-3 hover:text-blue-600 mb-5">

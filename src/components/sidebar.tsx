@@ -9,13 +9,13 @@ export default function Sidebar() {
         <h1 className="text-2xl font-bold mb-8 text-blue-600">LibroSpace</h1>
         <nav className="space-y-3">
           <a
-            href="/"
+            href=""
             className="block p-2 rounded-md hover:bg-blue-50 font-medium text-gray-700"
           >
             🏠 Home
           </a>
           <a
-            href="/"
+            href=""
             className="block p-2 rounded-md hover:bg-blue-50 font-medium text-gray-700"
           >
             📊 Analytics

@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Categories from "@/components/layout/categories-book";
 import PopularBooks from "@/components/layout/popular-book";
-import Image from "next/image";
 
 export default async function HomePage() {
     const session = await getServerSession(authOptions);
@@ -31,12 +30,18 @@ export default async function HomePage() {
                     </div>
 
                     {/* Profile */}
-                    <div className="flex items-center gap-2 bg-white shadow p-2 rounded-full pr-4 cursor-pointer hover:shadow-md ml-4">
-                        <Image
-                            src=""
-                            alt="profile"
-                            className="h-10 w-10 rounded-full object-cover"
-                        />
+                    <div className="flex items-center gap-3">
+                        <span className="text-sm text-gray-500">
+                            Hi, {user?.name ?? "Admin"}
+                        </span>
+
+                        <Link href="/profile">
+                            <img
+                                src="https://i.pravatar.cc/40"
+                                alt="avatar"
+                                className="rounded-full w-12 h-12 border cursor-pointer hover:opacity-80 transition"
+                            />
+                        </Link>
                     </div>
                 </div>
 

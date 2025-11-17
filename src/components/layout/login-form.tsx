@@ -32,7 +32,7 @@ export function LoginForm() {
             return
         }
 
-        const result = await signIn("credentials", {
+        const result = await signIn("user-login", {
             redirect: true,
             email,
             password,
