@@ -20,17 +20,17 @@ export function LoginForm() {
 
 
     async function handleSubmit(formLogin: FormData) {
-        const name = String(formLogin.get('name'))
+        const email = String(formLogin.get('email'))
         const password = String(formLogin.get('password'))
 
-        if (!name || !password) {
+        if (!email || !password) {
             alert("Please fill in all fields.")
             return
         }
 
         const result = await signIn("admin-login", {
             redirect: true,
-            name,
+            email,
             password,
             callbackUrl: "/admin/dashboard",
         })
@@ -56,9 +56,9 @@ export function LoginForm() {
                 <CardContent>
                     <div className="grid gap-6">
 
-                        <div className="grid gap-3">
-                            <Label htmlFor="name">Username</Label>
-                            <Input id="name" name="name" placeholder="johndoe" required />
+                        <div className="grid gap-1">
+                            <Label htmlFor="email">Email</Label>
+                            <Input id="email" type="email" name="email" placeholder="m@example.com" required />
                         </div>
 
                         <div className="grid gap-3 relative">
@@ -87,21 +87,6 @@ export function LoginForm() {
                         >
                             Login
                         </Button>
-
-                        <div className="relative text-center">
-                            <span className="absolute inset-x-0 top-1/2 border-t border-gray-200"></span>
-                            <span className="relative bg-white px-2 text-gray-500 text-sm">or</span>
-                        </div>
-
-                        <div className="text-center text-sm text-gray-600">
-                            Don’t have an account?{" "}
-                            <a
-                                href="/register"
-                                className="text-blue-600 hover:text-blue-700 font-medium underline underline-offset-4"
-                            >
-                                Sign up
-                            </a>
-                        </div>
                     </div>
                 </CardContent>
             </Card>

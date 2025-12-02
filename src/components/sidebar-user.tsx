@@ -1,7 +1,7 @@
 "use client";
 import { signOut } from "next-auth/react"
 import Link from "next/link"
-import { Menu, Library, BookOpen, Home, Settings,Bookmark } from "lucide-react"
+import { Menu, Library, BookOpen, Home, Settings, Bookmark, History } from "lucide-react"
 
 
 export default function SidebarUser() {
@@ -25,8 +25,8 @@ export default function SidebarUser() {
             <Bookmark className="h-5 w-5" /> Favorites
           </Link>
 
-          <Link href="/peminjaman" className="flex items-center gap-3 hover:text-blue-600 mb-5">
-            <Menu className="h-5 w-5" /> Peminjaman
+          <Link href="/history" className="flex items-center gap-3 hover:text-blue-600 mb-5">
+            <History className="h-5 w-5" /> History
           </Link>
 
           <Link href="/pengaturan" className="flex items-center gap-3 hover:text-blue-600">

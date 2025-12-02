@@ -13,13 +13,26 @@ export default async function DashBoard() {
         redirect('/unauthorized')
     }
 
+
+    const data = await fetch("http://localhost:8080/books", {
+        method: "GET",
+        cache: "no-store",
+    });
+
+    const json = await data.json();
+    const books: Book[] = json.data;
+
+
+
+    
+
     return (
         <div className="flex">
             {/* Sidebar */}
             <Sidebar />
 
             {/* Main Content */}
-            <main className="ml-64 flex-1 p-6">
+            <main className="flex-1 p-6">
                 <header className="bg-white shadow-sm p-4 flex justify-between items-center rounded-xl">
                     <h2 className="text-lg font-semibold">Dashboard Overview</h2>
                     <div className="flex items-center gap-3">
@@ -37,17 +50,17 @@ export default async function DashBoard() {
                 {/* Statistik Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                     <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
-                        <h3 className="text-gray-500">Users</h3>
-                        <p className="text-3xl font-bold mt-2">1,245</p>
+                        <h3 className="text-gray-500">Jumlah Buku</h3>
+                        <p className="text-3xl font-bold mt-2">{books.length}</p>
                     </div>
 
                     <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
-                        <h3 className="text-gray-500">Revenue</h3>
+                        <h3 className="text-gray-500">jumlah user</h3>
                         <p className="text-3xl font-bold mt-2">$12,430</p>
                     </div>
 
                     <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
-                        <h3 className="text-gray-500">Orders</h3>
+                        <h3 className="text-gray-500">Jumlah Peminjaman</h3>
                         <p className="text-3xl font-bold mt-2">320</p>
                     </div>
                 </div>

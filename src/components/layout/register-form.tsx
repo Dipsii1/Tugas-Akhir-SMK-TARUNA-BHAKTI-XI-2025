@@ -21,11 +21,8 @@ export function RegisterForm() {
   const [password, setPassword] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [emailError, setEmailError] = useState("")
-  const [showPassword, setShowPassword] = useState(false) // 👈 state untuk toggle
+  const [showPassword, setShowPassword] = useState(false)
 
-  const handleGoogleLogin = async () => {
-    await signIn("google", { callbackUrl: "/login" })
-  }
 
   const validatePassword = (value: string) => {
     const strongPassword = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -74,7 +71,7 @@ export function RegisterForm() {
                     validatePassword(e.target.value)
                   }}
                   required
-                  className="pr-10" // ruang untuk ikon
+                  className="pr-10"
                 />
                 <button
                   type="button"

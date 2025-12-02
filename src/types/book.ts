@@ -1,7 +1,10 @@
 export interface Book {
-  id: string;
+  id: number;
   judul: string;
-  author: string;
-  kategori: string;
-  deskripsi: string;
+  penulis: string | null;
+  penerbit: string | null;
+  deskripsi: string | null;
+  kategori: string | null;
+  jumlah_total: number;
+  jumlah_tersedia: number;
 }

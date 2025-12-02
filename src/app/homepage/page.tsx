@@ -5,12 +5,18 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Categories from "@/components/layout/categories-book";
 import PopularBooks from "@/components/layout/popular-book";
+import BooksList from "@/components/layout/books-list";
 
 export default async function HomePage() {
     const session = await getServerSession(authOptions);
     const user = session?.user;
 
     console.log("Session User:", user);
+
+
+    if (!user) {
+        
+    }
 
     return (
         <div className="flex min-h-screen bg-gradient-to-br from-blue-200 via-white to-blue-100">
@@ -50,6 +56,9 @@ export default async function HomePage() {
 
                 {/* Buku Populer */}
                 <PopularBooks />
+
+                {/* daftar buku */}
+                <BooksList />
             </main>
         </div>
     )
