@@ -67,15 +67,30 @@ export default function LoanListUI() {
                 <td className="p-3">{loan.tgl_pengembalian ? new Date(loan.tgl_pengembalian).toLocaleDateString() : "-"}</td>
                 <td className="p-3">
                   <span
-                    className={`px-3 py-1 rounded text-white capitalize ${
-                      loan.status === "dipinjam"
-                        ? "bg-blue-600"
-                        : loan.status === "terlambat"
-                        ? "bg-red-600"
-                        : "bg-green-600"
-                    }`}
+                    className={`px-3 py-1 rounded text-white text-xs capitalize font-semibold
+      ${loan.status === "pending"
+                        ? "bg-yellow-500"
+                        : loan.status === "accept"
+                          ? "bg-blue-600"
+                          : loan.status === "late"
+                            ? "bg-red-600"
+                            : loan.status === "returned"
+                              ? "bg-green-600"
+                              : loan.status === "rejected"
+                                ? "bg-gray-600"
+                                : "bg-black"
+                      }
+                      `}
                   >
-                    {loan.status}
+                    {loan.status === "accept"
+                      ? "dipinjam"
+                      : loan.status === "returned"
+                        ? "dikembalikan"
+                        : loan.status === "pending"
+                          ? "menunggu"
+                          : loan.status === "rejected"
+                            ? "ditolak"
+                            : loan.status}
                   </span>
                 </td>
               </tr>

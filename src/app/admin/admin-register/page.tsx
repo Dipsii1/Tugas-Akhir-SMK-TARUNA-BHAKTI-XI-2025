@@ -1,5 +1,6 @@
 import { Book } from "lucide-react"
 import { RegisterForm } from "@/components/layout/components-admin/register-admin-form"
+
 export default async function LoginPage() {
   return (
     <div className="flex min-h-screen w-screen flex-col items-center justify-center bg-gradient-to-br from-blue-300 via-white to-blue-100 p-6 md:p-10">

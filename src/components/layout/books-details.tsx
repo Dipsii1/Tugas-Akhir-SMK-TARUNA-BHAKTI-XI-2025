@@ -16,41 +16,41 @@ export default function DetailBuku({ book }: { book: Book }) {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
 
-  const handleBorrow = () => {
-    if (status === "loading" || stokHabis) return;
+  const handleBorrow = async () => {
+    if (status === "loading" || loading || stokHabis) return;
 
     if (!session || !userId) {
-      setBorrowMessage("Silakan login terlebih dahulu untuk meminjam buku.");
+      setBorrowMessage("Silakan login terlebih dahulu.");
       setShowPopup(true);
       return;
     }
 
     setLoading(true);
 
-    fetch("http://localhost:8080/borrowed", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id_buku: book.id, id_user: userId }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(`Borrow failed: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        setBorrowMessage(
-          data.success
-            ? `Buku "${book.judul}" berhasil dipinjam!`
-            : data.message || "Gagal meminjam buku."
-        );
-      })
-      .catch((err) => {
-        console.error(err);
-        setBorrowMessage("Banyak sekali percobaan coba lagi nanti.");
-      })
-      .finally(() => {
-        setLoading(false);
-        setShowPopup(true);
+    try {
+      const data = await fetch("http://localhost:8080/borrowed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id_buku: book.id,
+          id_user: userId
+        }),
       });
+
+      const json = await data.json();
+
+      if (!data.ok) {
+        throw new Error(json.message || "Gagal meminjam buku.");
+      }
+
+      setBorrowMessage(`Buku "${book.judul}" berhasil dipinjam!`);
+
+    } catch (error) {
+      setBorrowMessage(error.message || "Terjadi kesalahan.");
+    } finally {
+      setLoading(false);
+      setShowPopup(true);
+    }
   };
 
   return (
@@ -67,10 +67,16 @@ export default function DetailBuku({ book }: { book: Book }) {
         <div className="w-full md:w-1/4">
           <div className="w-full h-60 md:h-72 bg-gray-200 rounded-xl overflow-hidden shadow">
             <img
-              src="/default-book-cover.png"
-              alt="Book Cover"
+              src={
+                book.cover
+                  ? `http://localhost:8080/uploads/books/${book.cover}`
+                  : "/default-book-cover.png"
+              }
+              alt={book.judul}
               className="w-full h-full object-cover"
             />
+
+
           </div>
         </div>
 
@@ -85,9 +91,8 @@ export default function DetailBuku({ book }: { book: Book }) {
           </span>
 
           <span
-            className={`inline-block px-4 py-1 rounded-full text-sm mb-2 ml-2 ${
-              stokHabis ? "bg-red-100 text-red-700" : "bg-blue-200 text-blue-700"
-            }`}
+            className={`inline-block px-4 py-1 rounded-full text-sm mb-2 ml-2 ${stokHabis ? "bg-red-100 text-red-700" : "bg-blue-200 text-blue-700"
+              }`}
           >
             {stokHabis ? "Stok Habis" : `Stok: ${stok}`}
           </span>
@@ -98,11 +103,10 @@ export default function DetailBuku({ book }: { book: Book }) {
             <button
               onClick={handleBorrow}
               disabled={stokHabis || loading || status === "loading"}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl shadow transition cursor-pointer ${
-                stokHabis
-                  ? "bg-gray-400 cursor-not-allowed text-white"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
-              }`}
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl shadow transition cursor-pointer ${stokHabis
+                ? "bg-gray-400 cursor-not-allowed text-white"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+                }`}
             >
               <BookOpen size={20} />
               {loading ? "Meminjam..." : stokHabis ? "Stok Habis" : "Pinjam Buku"}
