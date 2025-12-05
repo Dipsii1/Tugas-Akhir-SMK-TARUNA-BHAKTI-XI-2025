@@ -21,9 +21,9 @@ export default function SidebarUser() {
             <BookOpen className="h-5 w-5" /> Buku
           </Link>
 
-          <Link href="/users/favorites" className="flex items-center gap-3 hover:text-blue-600 mb-5">
+          {/* <Link href="/users/favorites" className="flex items-center gap-3 hover:text-blue-600 mb-5">
             <Bookmark className="h-5 w-5" /> Favorites
-          </Link>
+          </Link> */}
 
           <Link href="/history" className="flex items-center gap-3 hover:text-blue-600 mb-5">
             <History className="h-5 w-5" /> History

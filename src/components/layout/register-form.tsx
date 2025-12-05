@@ -101,16 +101,6 @@ export function RegisterForm() {
               <span className="relative bg-white px-2 text-gray-500 text-sm">or</span>
             </div>
 
-            {/* Google login */}
-            <Button
-              onClick={handleGoogleLogin}
-              variant="outline"
-              className="w-full flex items-center justify-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-100"
-            >
-              <FcGoogle size={22} />
-              Continue with Google
-            </Button>
-
             <div className="text-center text-sm text-gray-600">
               Already have an account?{" "}
               <a

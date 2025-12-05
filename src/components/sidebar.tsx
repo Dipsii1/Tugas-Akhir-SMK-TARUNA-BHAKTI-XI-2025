@@ -97,7 +97,7 @@ export default function Sidebar() {
               </Link>
 
               <Link
-                href="/admin/borrowed-list"
+                href="/admin/request-list"
                 onClick={submenuClose}
                 className={`
                   flex items-center gap-3 px-2 py-2 rounded-md text-[14px] transition-all
@@ -137,7 +137,7 @@ export default function Sidebar() {
 
         {/* PENGATURAN */}
         <Link
-          href="/pengaturan"
+          href="/admin/settings"
           className={`flex items-center gap-3 hover:bg-blue-100 hover:scale-[1.02] px-2 py-2 rounded-lg transition-all ${isActive("/pengaturan")}`}
         >
           <Settings className="h-5 w-5" /> Pengaturan
