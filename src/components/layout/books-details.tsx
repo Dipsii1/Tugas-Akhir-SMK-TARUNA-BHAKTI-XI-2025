@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Book } from "@/types/book";
-import { BookOpen, Heart } from "lucide-react";
+import { BookOpen, Heart, CheckCircle, XCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 export default function DetailBuku({ book }: { book: Book }) {
@@ -66,95 +66,147 @@ export default function DetailBuku({ book }: { book: Book }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      {/* Popup */}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50 py-12 px-4">
+      {/* Popup Notification */}
       {showPopup && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md animate-slideDown">
           <div className={`${
-            isSuccess ? "bg-green-500" : "bg-red-500"
-          } text-white p-4 rounded-lg shadow-lg`}>
-            <p className="font-medium text-center">{borrowMessage}</p>
+            isSuccess 
+              ? "bg-blue-600 border-blue-700" 
+              : "bg-gray-900 border-gray-800"
+          } border-2 text-white p-4 rounded-xl shadow-2xl`}>
+            <div className="flex items-center gap-3">
+              {isSuccess ? (
+                <CheckCircle className="w-6 h-6 flex-shrink-0" />
+              ) : (
+                <XCircle className="w-6 h-6 flex-shrink-0" />
+              )}
+              <p className="font-semibold">{borrowMessage}</p>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Main Content */}
-      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-sm p-6 md:p-8">
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Book Cover */}
-          <div className="md:w-1/3">
-            <div className="aspect-[3/4] rounded-xl overflow-hidden shadow-md">
-              <img
-                src={
-                  book.cover
-                    ? `http://localhost:8080/uploads/books/${book.cover}`
-                    : "/default-book-cover.png"
-                }
-                alt={book.judul}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-
-          {/* Book Info */}
-          <div className="md:w-2/3 flex flex-col">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {book.judul}
-            </h1>
-            
-            <p className="text-gray-600 text-lg mb-4">
-              {book.penulis || "Penulis tidak diketahui"}
-            </p>
-
-            <div className="flex gap-2 mb-6">
-              <span className="bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-medium">
-                {book.kategori || "Tanpa Kategori"}
-              </span>
-              <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${
-                stokHabis 
-                  ? "bg-red-100 text-red-700" 
-                  : "bg-green-100 text-green-700"
-              }`}>
-                {stokHabis ? "Stok Habis" : `Stok: ${stok}`}
-              </span>
+      {/* Main Content Card */}
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+          <div className="grid md:grid-cols-5 gap-0">
+            {/* Left Section - Book Cover */}
+            <div className="md:col-span-2 bg-gradient-to-br from-blue-600 to-blue-800 p-8 md:p-10 flex items-center justify-center">
+              <div className="w-full max-w-sm">
+                <div className="aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white/20 transform hover:scale-105 transition-transform duration-300">
+                  <img
+                    src={
+                      book.cover
+                        ? `http://localhost:8080/uploads/books/${book.cover}`
+                        : "/default-book-cover.png"
+                    }
+                    alt={book.judul}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="mb-6 flex-1">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">Deskripsi</h2>
-              <p className="text-gray-600 leading-relaxed">
-                {book.deskripsi || "Tidak ada deskripsi."}
-              </p>
-            </div>
+            {/* Right Section - Book Details */}
+            <div className="md:col-span-3 p-8 md:p-12">
+              {/* Title & Author */}
+              <div className="mb-8">
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+                  {book.judul}
+                </h1>
+                <p className="text-xl text-gray-600">
+                  {book.penulis || "Penulis tidak diketahui"}
+                </p>
+              </div>
 
-            {/* Buttons */}
-            <div className="flex gap-3 mt-auto">
-              <button
-                onClick={handleBorrow}
-                disabled={stokHabis || loading}
-                className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium transition ${
-                  stokHabis
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"
-                }`}
-              >
-                <BookOpen size={20} />
-                {loading ? "Memproses..." : stokHabis ? "Stok Habis" : "Pinjam Buku"}
-              </button>
+              {/* Category & Stock Badges */}
+              <div className="flex flex-wrap gap-3 mb-8">
+                <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-5 py-2.5 rounded-full text-sm font-semibold">
+                  <BookOpen size={16} />
+                  {book.kategori || "Tanpa Kategori"}
+                </span>
+                <span className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold ${
+                  stokHabis 
+                    ? "bg-gray-900 text-white" 
+                    : stok <= 3
+                    ? "bg-gray-800 text-white"
+                    : "bg-blue-600 text-white"
+                }`}>
+                  {stokHabis ? "Stok Habis" : `${stok} Tersedia`}
+                </span>
+              </div>
 
-              <button
-                onClick={() => {
-                  setBorrowMessage("Fitur favorit segera hadir!");
-                  setIsSuccess(false);
-                  setShowPopup(true);
-                }}
-                className="flex items-center justify-center gap-2 bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-xl font-medium transition"
-              >
-                <Heart size={20} />
-              </button>
+              {/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-8"></div>
+
+              {/* Description */}
+              <div className="mb-10">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Deskripsi</h2>
+                <p className="text-gray-700 leading-relaxed text-lg">
+                  {book.deskripsi || "Tidak ada deskripsi tersedia untuk buku ini."}
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={handleBorrow}
+                  disabled={stokHabis || loading}
+                  className={`flex-1 flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 ${
+                    stokHabis
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : loading
+                      ? "bg-blue-400 text-white cursor-wait"
+                      : "bg-blue-600 hover:bg-blue-700 text-white hover:shadow-xl hover:-translate-y-0.5"
+                  }`}
+                >
+                  <BookOpen size={22} />
+                  {loading ? "Memproses..." : stokHabis ? "Stok Habis" : "Pinjam Buku"}
+                </button>
+
+                <button
+                  onClick={() => {
+                    setBorrowMessage("Fitur favorit segera hadir!");
+                    setIsSuccess(false);
+                    setShowPopup(true);
+                  }}
+                  className="sm:w-auto flex items-center justify-center gap-3 bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
+                >
+                  <Heart size={22} />
+                  <span className="hidden sm:inline">Favorit</span>
+                </button>
+              </div>
+
+              {/* Stock Warning */}
+              {!stokHabis && stok <= 3 && (
+                <div className="mt-6 bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-600 p-4 rounded-lg">
+                  <p className="text-blue-900 font-semibold text-sm">
+                    ⚡ Stok terbatas! Hanya tersisa {stok} buku. Segera pinjam sebelum kehabisan!
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translate(-50%, -30px);
+          }
+          to {
+            opacity: 1;
+            transform: translate(-50%, 0);
+          }
+        }
+        
+        .animate-slideDown {
+          animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+      `}</style>
     </div>
   );
 }

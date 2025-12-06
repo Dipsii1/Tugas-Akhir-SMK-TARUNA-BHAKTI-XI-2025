@@ -71,7 +71,6 @@ export default function PopularBooks() {
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Buku Populer</h2>
             <p className="text-gray-600">Buku yang paling banyak dibaca</p>
           </div>
-          <TrendingUp className="w-10 h-10 text-blue-600" />
         </div>
 
         {books.length === 0 ? (

@@ -71,7 +71,6 @@ export default function BooksList() {
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Koleksi Buku</h2>
             <p className="text-gray-600">Temukan buku favorit Anda</p>
           </div>
-          <BookOpen className="w-10 h-10 text-blue-600" />
         </div>
 
         {booksList.length === 0 ? (
@@ -114,7 +113,6 @@ export default function BooksList() {
                       
                       <div className="flex items-center text-blue-600 text-sm font-medium group-hover:gap-2 transition-all">
                         <span>Lihat Detail</span>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </div>
                   </div>

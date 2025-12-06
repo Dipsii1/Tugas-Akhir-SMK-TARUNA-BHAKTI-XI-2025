@@ -74,7 +74,6 @@ export default function BooksPage() {
               {books.length} buku tersedia di perpustakaan
             </p>
           </div>
-          <BookOpen className="w-10 h-10 text-blue-600" />
         </div>
 
         {books.length === 0 ? (

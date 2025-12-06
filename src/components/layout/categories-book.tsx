@@ -27,7 +27,6 @@ export default async function CategoriesBook() {
                             <h2 className="text-3xl font-bold text-gray-900 mb-2">Kategori Buku</h2>
                             <p className="text-gray-600">Jelajahi buku berdasarkan kategori</p>
                         </div>
-                        <Tag className="w-10 h-10 text-blue-600" />
                     </div>
 
                     {categories.length > 0 ? (
