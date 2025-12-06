@@ -13,9 +13,17 @@ export default function AddBook() {
   // Fetch kategori
   useEffect(() => {
     fetch("http://localhost:8080/categories")
-      .then((res) => res.json())
-      .then((json) => setCategories(json.data))
-      .catch((err) => console.error("Failed to fetch categories:", err));
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        return res.json();
+      })
+      .then((json) => setCategories(json.data || []))
+      .catch((err) => {
+        console.error("Failed to fetch categories:", err);
+        setCategories([]);
+      });
   }, []);
 
   // Handle file preview
@@ -43,22 +51,25 @@ export default function AddBook() {
         body: formData,
       });
 
+      if (!response.ok) {
+        throw new Error("Failed to add book");
+      }
+
       const result = await response.json();
       setLoading(false);
 
       if (result.success) {
         alert("Buku berhasil ditambahkan!");
-        form.reset(); // 👈 Gunakan referensi form yang sudah disimpan
+        form.reset();
         setPreview(null);
       } else {
-        alert("Gagal menambahkan buku: " + result.message);
+        alert("Gagal menambahkan buku: " + (result.message || "Unknown error"));
       }
-
-      console.log(result);
     } catch (error) {
       console.error(error);
       setLoading(false);
-      alert("Terjadi kesalahan saat menambahkan buku.");
+      const errorMessage = error instanceof Error ? error.message : "Terjadi kesalahan saat menambahkan buku.";
+      alert(errorMessage);
     }
   };
 

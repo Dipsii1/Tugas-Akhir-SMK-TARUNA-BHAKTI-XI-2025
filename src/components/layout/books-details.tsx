@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Book } from "@/types/book";
 import { BookOpen, Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -9,6 +9,7 @@ export default function DetailBuku({ book }: { book: Book }) {
   const [showPopup, setShowPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const [borrowMessage, setBorrowMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const stok = book.jumlah_tersedia ?? 0;
   const stokHabis = stok <= 0;
@@ -16,11 +17,19 @@ export default function DetailBuku({ book }: { book: Book }) {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
 
+  useEffect(() => {
+    if (showPopup) {
+      const timer = setTimeout(() => setShowPopup(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showPopup]);
+
   const handleBorrow = async () => {
     if (status === "loading" || loading || stokHabis) return;
 
     if (!session || !userId) {
       setBorrowMessage("Silakan login terlebih dahulu.");
+      setIsSuccess(false);
       setShowPopup(true);
       return;
     }
@@ -44,9 +53,12 @@ export default function DetailBuku({ book }: { book: Book }) {
       }
 
       setBorrowMessage(`Buku "${book.judul}" berhasil dipinjam!`);
+      setIsSuccess(true);
 
     } catch (error) {
-      setBorrowMessage(error.message || "Terjadi kesalahan.");
+      const errorMessage = error instanceof Error ? error.message : "Terjadi kesalahan.";
+      setBorrowMessage(errorMessage);
+      setIsSuccess(false);
     } finally {
       setLoading(false);
       setShowPopup(true);
@@ -54,74 +66,92 @@ export default function DetailBuku({ book }: { book: Book }) {
   };
 
   return (
-    <div className="px-8 mt-5 max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      {/* Popup */}
       {showPopup && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl z-50 w-[90%] max-w-md border animate-slideDown">
-          <h2 className="text-lg font-semibold text-blue-700 text-center">
-            {borrowMessage}
-          </h2>
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
+          <div className={`${
+            isSuccess ? "bg-green-500" : "bg-red-500"
+          } text-white p-4 rounded-lg shadow-lg`}>
+            <p className="font-medium text-center">{borrowMessage}</p>
+          </div>
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-1/4">
-          <div className="w-full h-60 md:h-72 bg-gray-200 rounded-xl overflow-hidden shadow">
-            <img
-              src={
-                book.cover
-                  ? `http://localhost:8080/uploads/books/${book.cover}`
-                  : "/default-book-cover.png"
-              }
-              alt={book.judul}
-              className="w-full h-full object-cover"
-            />
-
-
+      {/* Main Content */}
+      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-sm p-6 md:p-8">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Book Cover */}
+          <div className="md:w-1/3">
+            <div className="aspect-[3/4] rounded-xl overflow-hidden shadow-md">
+              <img
+                src={
+                  book.cover
+                    ? `http://localhost:8080/uploads/books/${book.cover}`
+                    : "/default-book-cover.png"
+                }
+                alt={book.judul}
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="flex-1 mt-2 md:mt-0">
-          <h1 className="text-3xl font-bold text-blue-700 mb-2">{book.judul}</h1>
-          <p className="text-gray-700 text-lg mb-3">
-            Penulis: <span className="font-medium">{book.penulis || "-"}</span>
-          </p>
+          {/* Book Info */}
+          <div className="md:w-2/3 flex flex-col">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {book.judul}
+            </h1>
+            
+            <p className="text-gray-600 text-lg mb-4">
+              {book.penulis || "Penulis tidak diketahui"}
+            </p>
 
-          <span className="inline-block bg-blue-200 text-blue-700 px-4 py-1 rounded-full text-sm mb-2">
-            {book.kategori || "Tidak ada kategori"}
-          </span>
+            <div className="flex gap-2 mb-6">
+              <span className="bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-medium">
+                {book.kategori || "Tanpa Kategori"}
+              </span>
+              <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${
+                stokHabis 
+                  ? "bg-red-100 text-red-700" 
+                  : "bg-green-100 text-green-700"
+              }`}>
+                {stokHabis ? "Stok Habis" : `Stok: ${stok}`}
+              </span>
+            </div>
 
-          <span
-            className={`inline-block px-4 py-1 rounded-full text-sm mb-2 ml-2 ${stokHabis ? "bg-red-100 text-red-700" : "bg-blue-200 text-blue-700"
-              }`}
-          >
-            {stokHabis ? "Stok Habis" : `Stok: ${stok}`}
-          </span>
+            <div className="mb-6 flex-1">
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">Deskripsi</h2>
+              <p className="text-gray-600 leading-relaxed">
+                {book.deskripsi || "Tidak ada deskripsi."}
+              </p>
+            </div>
 
-          <p className="text-gray-600 leading-relaxed">{book.deskripsi}</p>
-
-          <div className="flex gap-3 mt-6">
-            <button
-              onClick={handleBorrow}
-              disabled={stokHabis || loading || status === "loading"}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl shadow transition cursor-pointer ${stokHabis
-                ? "bg-gray-400 cursor-not-allowed text-white"
-                : "bg-blue-600 hover:bg-blue-700 text-white"
+            {/* Buttons */}
+            <div className="flex gap-3 mt-auto">
+              <button
+                onClick={handleBorrow}
+                disabled={stokHabis || loading}
+                className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium transition ${
+                  stokHabis
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
                 }`}
-            >
-              <BookOpen size={20} />
-              {loading ? "Meminjam..." : stokHabis ? "Stok Habis" : "Pinjam Buku"}
-            </button>
+              >
+                <BookOpen size={20} />
+                {loading ? "Memproses..." : stokHabis ? "Stok Habis" : "Pinjam Buku"}
+              </button>
 
-            <button
-              onClick={() => {
-                setBorrowMessage("Fitur favorit coming soon!");
-                setShowPopup(true);
-              }}
-              className="flex items-center gap-2 bg-pink-600 text-white px-6 py-3 rounded-xl hover:bg-pink-700 shadow transition cursor-pointer"
-            >
-              <Heart size={20} />
-              Favorites
-            </button>
+              <button
+                onClick={() => {
+                  setBorrowMessage("Fitur favorit segera hadir!");
+                  setIsSuccess(false);
+                  setShowPopup(true);
+                }}
+                className="flex items-center justify-center gap-2 bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-xl font-medium transition"
+              >
+                <Heart size={20} />
+              </button>
+            </div>
           </div>
         </div>
       </div>

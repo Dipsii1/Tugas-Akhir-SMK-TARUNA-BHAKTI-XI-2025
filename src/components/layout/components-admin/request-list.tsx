@@ -34,9 +34,19 @@ export default function AdminBorrowUI() {
   };
 
   const fetchLoans = async () => {
-    const res = await fetch("http://localhost:8080/borrowed");
-    const json = await res.json();
-    setLoans(json.data ?? []);
+    try {
+      const res = await fetch("http://localhost:8080/borrowed");
+      
+      if (!res.ok) {
+        throw new Error("Failed to fetch loans");
+      }
+      
+      const json = await res.json();
+      setLoans(json.data ?? []);
+    } catch (error) {
+      console.error("Error fetching loans:", error);
+      setLoans([]);
+    }
   };
 
   useEffect(() => {
@@ -44,16 +54,25 @@ export default function AdminBorrowUI() {
   }, []);
 
   // =============================
-  // ACCEPT / REJECT LANGSUNG
+  // UPDATE STATUS DIRECT
   // =============================
   const updateStatusDirect = async (id: number, status: string) => {
-    await fetch(`http://localhost:8080/borrowed/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
+    try {
+      const res = await fetch(`http://localhost:8080/borrowed/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
 
-    fetchLoans();
+      if (!res.ok) {
+        throw new Error("Failed to update status");
+      }
+
+      fetchLoans();
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Gagal mengupdate status");
+    }
   };
 
   // =============================
@@ -79,18 +98,27 @@ export default function AdminBorrowUI() {
   const saveEdit = async () => {
     if (!editId) return;
 
-    await fetch(`http://localhost:8080/borrowed/${editId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        status: editStatus,
-        tgl_pengembalian: editTanggal || null,
-        catatan: editCatatan || null,
-      }),
-    });
+    try {
+      const res = await fetch(`http://localhost:8080/borrowed/${editId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: editStatus,
+          tgl_pengembalian: editTanggal || null,
+          catatan: editCatatan || null,
+        }),
+      });
 
-    cancelEdit();
-    fetchLoans();
+      if (!res.ok) {
+        throw new Error("Failed to update loan");
+      }
+
+      cancelEdit();
+      fetchLoans();
+    } catch (error) {
+      console.error("Error updating loan:", error);
+      alert("Gagal menyimpan perubahan");
+    }
   };
 
   // =============================
@@ -99,11 +127,20 @@ export default function AdminBorrowUI() {
   const deleteLoan = async (id: number) => {
     if (!confirm("Hapus data peminjaman?")) return;
 
-    await fetch(`http://localhost:8080/borrowed/${id}`, {
-      method: "DELETE",
-    });
+    try {
+      const res = await fetch(`http://localhost:8080/borrowed/${id}`, {
+        method: "DELETE",
+      });
 
-    fetchLoans();
+      if (!res.ok) {
+        throw new Error("Failed to delete loan");
+      }
+
+      fetchLoans();
+    } catch (error) {
+      console.error("Error deleting loan:", error);
+      alert("Gagal menghapus data peminjaman");
+    }
   };
 
   return (
@@ -170,7 +207,7 @@ export default function AdminBorrowUI() {
                         <option value="returned">Returned</option>
                       </select>
                     </td>
-                    
+
                     <td className="p-3">
                       <input
                         type="text"
@@ -198,7 +235,7 @@ export default function AdminBorrowUI() {
                         {loan.status}
                       </span>
                     </td>
-                    
+
                     <td className="p-3 text-xs text-gray-600">
                       {loan.catatan || "-"}
                     </td>
@@ -227,13 +264,17 @@ export default function AdminBorrowUI() {
                     </>
                   ) : (
                     <>
-                      {/* ACCEPT */}
-                      <button
-                        onClick={() => updateStatusDirect(loan.id, "accept")}
-                        className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
-                      >
-                        Accept
-                      </button>
+                      {/* ACCEPT hanya jika masih pending */}
+                      {loan.status === "pending" && (
+                        <button
+                          onClick={() =>
+                            updateStatusDirect(loan.id, "accept")
+                          }
+                          className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                        >
+                          Accept
+                        </button>
+                      )}
 
                       {/* EDIT */}
                       <button

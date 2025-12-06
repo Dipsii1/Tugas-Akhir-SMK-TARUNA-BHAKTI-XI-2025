@@ -29,7 +29,7 @@ export default function SidebarUser() {
             <History className="h-5 w-5" /> History
           </Link>
 
-          <Link href="/pengaturan" className="flex items-center gap-3 hover:text-blue-600">
+          <Link href="/settings" className="flex items-center gap-3 hover:text-blue-600">
             <Settings className="h-5 w-5" /> Pengaturan
           </Link>
         </nav>

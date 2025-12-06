@@ -19,6 +19,11 @@ export default function LoanListUI() {
     const fetchLoans = async () => {
       try {
         const res = await fetch(`http://localhost:8080/borrowed`);
+        
+        if (!res.ok) {
+          throw new Error("Failed to fetch loans");
+        }
+        
         const json = await res.json();
         setLoans(json.data ?? []);
       } catch (error) {

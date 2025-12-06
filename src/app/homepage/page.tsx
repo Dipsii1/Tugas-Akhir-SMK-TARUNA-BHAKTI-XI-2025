@@ -6,6 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Categories from "@/components/layout/categories-book";
 import PopularBooks from "@/components/layout/popular-book";
 import BooksList from "@/components/layout/books-list";
+import { redirect } from "next/navigation";
 
 export default async function HomePage() {
     const session = await getServerSession(authOptions);
@@ -15,7 +16,7 @@ export default async function HomePage() {
 
 
     if (!user) {
-        
+        redirect("/login");
     }
 
     return (
@@ -41,7 +42,7 @@ export default async function HomePage() {
                             Hi, {user?.name ?? "Admin"}
                         </span>
 
-                        <Link href="/profile">
+                        <Link href="/settings">
                             <img
                                 src="https://i.pravatar.cc/40"
                                 alt="avatar"
